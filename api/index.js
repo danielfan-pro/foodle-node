@@ -9,6 +9,42 @@ app.use(express.json())
 const YELP_KEY        = process.env.YELP_API_KEY
 const SPOONACULAR_KEY = process.env.SPOONACULAR_API_KEY
 
+const extractBusinessUrlFromAi = (aiData, businessId) => {
+  const entities = Array.isArray(aiData?.entities) ? aiData.entities : []
+
+  for (const entity of entities) {
+    const businesses = Array.isArray(entity?.businesses) ? entity.businesses : []
+    for (const business of businesses) {
+      if (business?.id !== businessId) continue
+      const businessUrl = business?.attributes?.BusinessUrl
+      if (businessUrl) return businessUrl
+    }
+  }
+
+  return null
+}
+
+const getBusinessWebsiteFromAi = async (business) => {
+  const queryParts = [business?.name, business?.location?.city, business?.location?.state]
+    .filter(Boolean)
+  if (!queryParts.length) return null
+
+  const query = `What is the official website for ${queryParts.join(', ')}?`
+  const user_context = {
+    locale: 'en_US',
+    latitude: business?.coordinates?.latitude ?? undefined,
+    longitude: business?.coordinates?.longitude ?? undefined
+  }
+
+  const { data } = await axios.post(
+    'https://api.yelp.com/ai/chat/v2',
+    { query, user_context },
+    { headers: { Authorization: `Bearer ${YELP_KEY}` } }
+  )
+
+  return extractBusinessUrlFromAi(data, business?.id) || null
+}
+
 // ── Restaurants ──────────────────────────────────────────────────────────────
 
 app.get('/api/v1/restaurants/:id', async (req, res) => {
@@ -17,7 +53,22 @@ app.get('/api/v1/restaurants/:id', async (req, res) => {
       `https://api.yelp.com/v3/businesses/${req.params.id}`,
       { headers: { Authorization: `Bearer ${YELP_KEY}` } }
     )
-    res.json({ restaurant: data })
+
+    let businessWebsite = data?.attributes?.BusinessUrl || null
+    if (!businessWebsite) {
+      try {
+        businessWebsite = await getBusinessWebsiteFromAi(data)
+      } catch (_aiError) {
+        businessWebsite = null
+      }
+    }
+
+    res.json({
+      restaurant: {
+        ...data,
+        business_website: businessWebsite
+      }
+    })
   } catch (err) {
     res.status(502).json({ error: err.response?.data?.error?.description || 'Could not fetch restaurant.' })
   }

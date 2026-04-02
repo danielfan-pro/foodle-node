@@ -19,6 +19,7 @@ const RestaurantShow = (props) => {
   const displayAddress = Array.isArray(props.restaurant?.location?.display_address)
     ? props.restaurant.location.display_address.join(", ")
     : ""
+  const websiteUrl = props.restaurant?.business_website || ""
 
   return (
     <div className="cell">
@@ -34,6 +35,18 @@ const RestaurantShow = (props) => {
         <div>
           <p>{props.restaurant?.display_phone || ""}</p>
         </div>
+        {websiteUrl ? (
+          <div>
+            <a
+              href={websiteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="click-here"
+            >
+              Visit restaurant website (external)
+            </a>
+          </div>
+        ) : null}
         <img
           src={props.restaurant?.image_url}
           className="restaurant-show-image"
