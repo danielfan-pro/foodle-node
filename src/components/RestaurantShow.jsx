@@ -20,6 +20,9 @@ const RestaurantShow = (props) => {
     ? props.restaurant.location.display_address.join(", ")
     : ""
   const websiteUrl = props.restaurant?.business_website || ""
+  const websiteHref = websiteUrl.startsWith("http")
+    ? websiteUrl
+    : `https://${websiteUrl}`
 
   return (
     <div className="cell">
@@ -34,19 +37,19 @@ const RestaurantShow = (props) => {
         </div>
         <div>
           <p>{props.restaurant?.display_phone || ""}</p>
+          {websiteUrl ? (
+            <p>
+              <a
+                href={websiteHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="restaurant-info-link"
+              >
+                {websiteUrl}
+              </a>
+            </p>
+          ) : null}
         </div>
-        {websiteUrl ? (
-          <div>
-            <a
-              href={websiteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="click-here"
-            >
-              Visit restaurant website (external)
-            </a>
-          </div>
-        ) : null}
         <img
           src={props.restaurant?.image_url}
           className="restaurant-show-image"

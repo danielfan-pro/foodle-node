@@ -111,6 +111,7 @@ h2, h3, h5, h6, p { color: var(--logo-blue); }
 .edit-review-header { color: var(--logo-orange); text-align: center; }
 .restaurant-name { color: var(--logo-orange); }
 .recipe-instruction { font-size: x-large; }
+.restaurant-info-link { color: inherit; text-decoration: underline; word-break: break-word; }
 .hide { display: none; }
 .show { display: block; }
 
