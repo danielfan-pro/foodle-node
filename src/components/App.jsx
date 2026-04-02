@@ -44,12 +44,12 @@ export const App = () => {
           <div className="top-bar-section">
             <ul className="right">
               <li>
-                <NavLink to="/restaurants" className="button clear">
+                <NavLink to="/restaurants?reset=1" className="button clear">
                   Restaurants
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/recipes" className="button clear">
+                <NavLink to="/recipes?reset=1" className="button clear">
                   Recipes
                 </NavLink>
               </li>
