@@ -16,7 +16,6 @@ npm run dev            # http://localhost:3000
 |-----|-------------|
 | `YELP_API_KEY` | From https://fusion.yelp.com |
 | `SPOONACULAR_API_KEY` | From https://spoonacular.com/food-api |
-| `FRONTEND_ORIGIN` | Your frontend URL e.g. `https://foodle.vercel.app` |
 
 ## API routes
 
@@ -40,6 +39,6 @@ npm run dev            # http://localhost:3000
 ## Deploy to Vercel
 
 1. Push to GitHub
-2. Import repo on https://vercel.com/new → Framework: **Other**
-3. Add env vars: `YELP_API_KEY`, `SPOONACULAR_API_KEY`, `FRONTEND_ORIGIN`
+2. Import repo on https://vercel.com/new → Framework: **Vite**
+3. Add env vars: `YELP_API_KEY`, `SPOONACULAR_API_KEY`
 4. Deploy ✅
