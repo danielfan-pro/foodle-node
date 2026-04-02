@@ -17,8 +17,13 @@ const RecipeShow = (props) => {
             dangerouslySetInnerHTML={{ __html: `${props.recipe.summary}` }}
           />
         </div>
-        <a href={`${props.recipe.sourceUrl}`} className="recipe-instruction">
-          Click here for the Instructions
+        <a
+          href={`${props.recipe.sourceUrl}`}
+          className="recipe-instruction"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Read full instructions (external site)
         </a>
       </div>
     </div>
