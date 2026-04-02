@@ -102,5 +102,7 @@ h2, h3, h5, h6, p { color: var(--logo-blue); }
   .restaurant-featured-image { width: min(94vw, 24rem); }
   .restaurant-image { width: min(72vw, 12rem); margin-top: 0.75rem; }
   .grid-x.grid-margin-x .cell p { margin-bottom: 0.65rem; }
+  .grid-x.grid-margin-x .cell { margin-bottom: 1.15rem; }
+  .grid-x.grid-margin-x .cell:last-child { margin-bottom: 0; }
   .grid-margin-x { margin-left: 1rem; margin-right: 1rem; }
 }
