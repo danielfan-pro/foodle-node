@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { createPortal } from "react-dom"
-import { BrowserRouter, Route, Switch } from "react-router-dom"
+import { BrowserRouter, Link, NavLink, Route, Switch } from "react-router-dom"
 import HomePage from "./HomePage"
 import RestaurantIndexContainer from "./RestaurantIndexContainer"
 import RestaurantShowContainer from "./RestaurantShowContainer"
@@ -8,6 +7,7 @@ import ReviewForm from "./ReviewForm"
 import UserProfileContainer from "./UserProfileContainer"
 import RecipeIndexContainer from "./RecipeIndexContainer"
 import RecipeShowContainer from "./RecipeShowContainer"
+import foodleTransparentLogo from "../foodle-logo.png"
 
 export const App = () => {
   const [theme, setTheme] = useState("light")
@@ -27,19 +27,42 @@ export const App = () => {
     document.body.className = theme
   }, [theme])
 
-  const toggleIcon = (
-    <i
-      className={`fa-solid fa-${status} dark-mode-toggle`}
-      onClick={toggleTheme}
-    ></i>
-  )
-
-  const toggleSlot = document.getElementById("theme-toggle-slot")
-
   return (
     <div className={`App ${theme}`}>
-      {toggleSlot ? createPortal(toggleIcon, toggleSlot) : toggleIcon}
       <BrowserRouter>
+        <div className="top-bar">
+          <div className="left">
+            <Link to="/" aria-label="Foodle home">
+              <img
+                src={foodleTransparentLogo}
+                alt="Foodle logo"
+                className="logo-nav-bar"
+              />
+            </Link>
+          </div>
+
+          <div className="top-bar-section">
+            <ul className="right">
+              <li>
+                <NavLink to="/restaurants" className="button clear">
+                  Restaurants
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/recipes" className="button clear">
+                  Recipes
+                </NavLink>
+              </li>
+              <li id="theme-toggle-slot">
+                <i
+                  className={`fa-solid fa-${status} dark-mode-toggle`}
+                  onClick={toggleTheme}
+                ></i>
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route
