@@ -22,7 +22,25 @@ const RestaurantShowContainer = (props) => {
     }
   }
 
+  const getRestaurantWebsite = async () => {
+    try {
+      const response = await fetch(`/api/v1/restaurants/${restaurantId}/website`)
+      if (!response.ok) return
+
+      const body = await response.json()
+      if (!body?.business_website) return
+
+      setRestaurant((prevRestaurant) => ({
+        ...prevRestaurant,
+        business_website: body.business_website,
+      }))
+    } catch (_err) {
+      // best-effort enrichment; keep primary detail view fast
+    }
+  }
+
   useEffect(() => { getRestaurant() }, [])
+  useEffect(() => { getRestaurantWebsite() }, [restaurantId])
 
   return (
     <div>

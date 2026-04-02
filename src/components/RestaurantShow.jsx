@@ -33,12 +33,12 @@ const RestaurantShow = (props) => {
         </div>
         <div className="price">{props.restaurant?.price || ""}</div>
         <div>
-          <p>{categories}</p>
+          <p className="restaurant-info-line">{categories}</p>
         </div>
         <div>
-          <p>{props.restaurant?.display_phone || ""}</p>
+          <p className="restaurant-info-line">{props.restaurant?.display_phone || ""}</p>
           {websiteUrl ? (
-            <p>
+            <p className="restaurant-info-line">
               <a
                 href={websiteHref}
                 target="_blank"

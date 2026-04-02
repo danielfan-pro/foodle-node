@@ -112,6 +112,7 @@ h2, h3, h5, h6, p { color: var(--logo-blue); }
 .restaurant-name { color: var(--logo-orange); }
 .recipe-instruction { font-size: x-large; }
 .restaurant-info-link { color: inherit; text-decoration: underline; word-break: break-word; }
+.restaurant-info-line { margin: 0.08rem 0 0.45rem; }
 .hide { display: none; }
 .show { display: block; }
 

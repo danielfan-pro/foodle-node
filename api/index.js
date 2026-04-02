@@ -8,6 +8,8 @@ app.use(express.json())
 
 const YELP_KEY        = process.env.YELP_API_KEY
 const SPOONACULAR_KEY = process.env.SPOONACULAR_API_KEY
+const WEBSITE_LOOKUP_TIMEOUT_MS = 1500
+const businessWebsiteCache = new Map()
 
 const extractBusinessUrlFromAi = (aiData, businessId) => {
   const entities = Array.isArray(aiData?.entities) ? aiData.entities : []
@@ -45,6 +47,13 @@ const getBusinessWebsiteFromAi = async (business) => {
   return extractBusinessUrlFromAi(data, business?.id) || null
 }
 
+const withTimeout = async (promise, timeoutMs) => {
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => resolve(null), timeoutMs)
+  })
+  return Promise.race([promise, timeoutPromise])
+}
+
 // ── Restaurants ──────────────────────────────────────────────────────────────
 
 app.get('/api/v1/restaurants/:id', async (req, res) => {
@@ -53,24 +62,45 @@ app.get('/api/v1/restaurants/:id', async (req, res) => {
       `https://api.yelp.com/v3/businesses/${req.params.id}`,
       { headers: { Authorization: `Bearer ${YELP_KEY}` } }
     )
+    res.json({
+      restaurant: {
+        ...data,
+        business_website: data?.attributes?.BusinessUrl || null
+      }
+    })
+  } catch (err) {
+    res.status(502).json({ error: err.response?.data?.error?.description || 'Could not fetch restaurant.' })
+  }
+})
+
+app.get('/api/v1/restaurants/:id/website', async (req, res) => {
+  const businessId = req.params.id
+  if (businessWebsiteCache.has(businessId)) {
+    return res.json({ business_website: businessWebsiteCache.get(businessId) })
+  }
+
+  try {
+    const { data } = await axios.get(
+      `https://api.yelp.com/v3/businesses/${businessId}`,
+      { headers: { Authorization: `Bearer ${YELP_KEY}` } }
+    )
 
     let businessWebsite = data?.attributes?.BusinessUrl || null
     if (!businessWebsite) {
       try {
-        businessWebsite = await getBusinessWebsiteFromAi(data)
+        businessWebsite = await withTimeout(
+          getBusinessWebsiteFromAi(data),
+          WEBSITE_LOOKUP_TIMEOUT_MS
+        )
       } catch (_aiError) {
         businessWebsite = null
       }
     }
 
-    res.json({
-      restaurant: {
-        ...data,
-        business_website: businessWebsite
-      }
-    })
+    businessWebsiteCache.set(businessId, businessWebsite || null)
+    return res.json({ business_website: businessWebsite || null })
   } catch (err) {
-    res.status(502).json({ error: err.response?.data?.error?.description || 'Could not fetch restaurant.' })
+    return res.status(502).json({ error: err.response?.data?.error?.description || 'Could not fetch restaurant website.' })
   }
 })
 
