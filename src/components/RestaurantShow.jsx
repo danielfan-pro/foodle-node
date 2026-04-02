@@ -23,6 +23,7 @@ const RestaurantShow = (props) => {
   const websiteHref = websiteUrl.startsWith("http")
     ? websiteUrl
     : `https://${websiteUrl}`
+  const yelpUrl = props.restaurant?.url || ""
 
   return (
     <div className="cell">
@@ -46,6 +47,18 @@ const RestaurantShow = (props) => {
                 className="restaurant-info-link"
               >
                 {websiteUrl}
+              </a>
+            </p>
+          ) : null}
+          {yelpUrl ? (
+            <p className="restaurant-info-line">
+              <a
+                href={yelpUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="restaurant-info-link"
+              >
+                View on Yelp
               </a>
             </p>
           ) : null}
