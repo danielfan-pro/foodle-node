@@ -35,9 +35,9 @@ ul.right { margin: 0; }
 .restaurant-featured h5 { margin: 0.1rem 0 0; line-height: 1.2; }
 .restaurant-featured .restaurant-stars { margin: 0; line-height: 1; }
 .restaurant-featured .price { margin: 0; line-height: 1.1; font-size: 2rem; }
-.restaurant-featured p { margin: 0.1rem 0 0.15rem; line-height: 1.25; max-width: 34rem; }
-.restaurant-featured-image { width: min(92vw, 30rem); aspect-ratio: 4 / 3; object-fit: cover; display: block; margin: 0.35rem auto 0; border-radius: 1rem; }
-.restaurant-image { width: min(100%, 14rem); aspect-ratio: 4 / 3; object-fit: cover; display: block; margin-left: auto; margin-right: auto; border-radius: 1rem; }
+.restaurant-featured p { margin: 0.1rem 0 0.45rem; line-height: 1.25; max-width: 34rem; }
+.restaurant-featured-image { width: min(92vw, 30rem); aspect-ratio: 4 / 3; object-fit: cover; display: block; margin: 0.6rem auto 0; border-radius: 1rem; }
+.restaurant-image { width: min(100%, 14rem); aspect-ratio: 4 / 3; object-fit: cover; display: block; margin: 0.55rem auto 0; border-radius: 1rem; }
 .recipe-image { width: 30%; display: block; margin-left: auto; margin-right: auto; border-radius: 1rem; }
 .restaurant-featured-image:hover { transform: scaleX(1.02) scaleY(1.02) scaleZ(1); transition: transform 1.6s ease 0s; }
 .restaurant-image:hover, .recipe-image:hover { transform: scaleX(1.05) scaleY(1.05) scaleZ(1); transition: transform 1.6s ease 0s; }
@@ -60,7 +60,7 @@ h2, h3, h5, h6, p { color: var(--logo-blue); }
 .grid-x.grid-margin-x .cell h6 { margin: 0; line-height: 1.2; }
 .grid-x.grid-margin-x .cell .restaurant-stars { margin: 0; line-height: 1; }
 .grid-x.grid-margin-x .cell .price { margin: 0; line-height: 1.1; }
-.grid-x.grid-margin-x .cell p { margin: 0.08rem 0 0.2rem; line-height: 1.25; }
+.grid-x.grid-margin-x .cell p { margin: 0.08rem 0 0.45rem; line-height: 1.25; }
 .text-left { text-align: left; }
 .dark { background-color: #303030; color: #fff; transition: background-color 0.4s ease-in-out; }
 .light { background-color: #eeeeee; color: #333; transition: background-color 0.4s ease-in-out; }
@@ -100,6 +100,7 @@ h2, h3, h5, h6, p { color: var(--logo-blue); }
   .search-bar .input-group { width: min(94vw, 24rem); display: block; }
   .search-bar .input-group .input-group-field, .search-bar .input-group input[type="text"] { width: 100%; padding: 0.75rem 0.9rem; margin-bottom: 0.65rem; }
   .restaurant-featured-image { width: min(94vw, 24rem); }
-  .restaurant-image { width: min(72vw, 12rem); }
+  .restaurant-image { width: min(72vw, 12rem); margin-top: 0.75rem; }
+  .grid-x.grid-margin-x .cell p { margin-bottom: 0.65rem; }
   .grid-margin-x { margin-left: 1rem; margin-right: 1rem; }
 }
