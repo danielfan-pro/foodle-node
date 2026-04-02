@@ -8,22 +8,35 @@ app.use(express.json())
 
 const YELP_KEY        = process.env.YELP_API_KEY
 const SPOONACULAR_KEY = process.env.SPOONACULAR_API_KEY
-const WEBSITE_LOOKUP_TIMEOUT_MS = 1500
+const WEBSITE_LOOKUP_TIMEOUT_MS = 6000
 const businessWebsiteCache = new Map()
 
 const extractBusinessUrlFromAi = (aiData, businessId) => {
   const entities = Array.isArray(aiData?.entities) ? aiData.entities : []
+  let fallbackWebsite = null
 
   for (const entity of entities) {
     const businesses = Array.isArray(entity?.businesses) ? entity.businesses : []
     for (const business of businesses) {
-      if (business?.id !== businessId) continue
-      const businessUrl = business?.attributes?.BusinessUrl
-      if (businessUrl) return businessUrl
+      const attributes = business?.attributes || {}
+      const candidate =
+        attributes?.BusinessUrl ||
+        attributes?.business_url ||
+        attributes?.website ||
+        null
+
+      if (!candidate) continue
+      if (business?.id === businessId) return candidate
+      if (!fallbackWebsite) fallbackWebsite = candidate
     }
   }
 
-  return null
+  if (fallbackWebsite) return fallbackWebsite
+
+  const responseText = aiData?.response?.text || ''
+  const urls = responseText.match(/https?:\/\/[^\s)]+/gi) || []
+  const nonYelpUrl = urls.find((url) => !/yelp\.com/i.test(url))
+  return nonYelpUrl || null
 }
 
 const getBusinessWebsiteFromAi = async (business) => {
@@ -97,7 +110,9 @@ app.get('/api/v1/restaurants/:id/website', async (req, res) => {
       }
     }
 
-    businessWebsiteCache.set(businessId, businessWebsite || null)
+    if (businessWebsite) {
+      businessWebsiteCache.set(businessId, businessWebsite)
+    }
     return res.json({ business_website: businessWebsite || null })
   } catch (err) {
     return res.status(502).json({ error: err.response?.data?.error?.description || 'Could not fetch restaurant website.' })
